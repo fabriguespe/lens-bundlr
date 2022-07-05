@@ -1,6 +1,6 @@
 <template>
   <div class="container text-center">
-    <MyNav/>
+    <MyNav :key="wallet" :wallet="wallet"/>
     <div>
       <h4 style="margin-top:20px;text-aling:center">Latest posts</h4>
       <div v-if="!pubs" class="loader"></div>
@@ -25,19 +25,28 @@ import MyNav from '@/components/Nav'
 export default {
   data() {
         return {
-            pubs:null,
+          wallet:this.$store.state.wallet,
+          pubs:null,
         }
   },
-  mounted(){
+  async mounted(){
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    const account = accounts[0]
+    this.wallet=account
+    this.$store.state.wallet=account
+
+    await this.$util.checkMatic()
     this.recommendProfiles()
   },
   methods:{
     
     async recommendProfiles() {
       try {
-        const response = await this.$util.gclient().query(recommendProfiles).toPromise()
+
+        const urqlClient = await this.$util.createClient()
+        const response = await urqlClient.query(recommendProfiles).toPromise()
         const profileData = await Promise.all(response.data.recommendedProfiles.map(async profile => {
-          const pub = await this.$util.gclient().query(getPublications, { id: profile.id, limit: 1 }).toPromise()
+          const pub = await urqlClient.query(getPublications, { id: profile.id, limit: 1 }).toPromise()
           profile.publication = pub.data.publications.items[0]
           return profile
         }))

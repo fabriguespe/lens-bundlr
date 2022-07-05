@@ -1,8 +1,6 @@
-# Introduction
+## Introduction
 
 In this article I will be showing you how to create an app that is fully independent of centralized servers. This app will be stored forever just for a once-time payment. No one ever will be able to delete or modify it.
-
-### Demo:
 
 ### Arweave:
 
@@ -15,10 +13,12 @@ Bundlr makes web3 data storage on Arweave accessible by making it as fast, easy,
 ### Lens: 
 Lens Protocol is a user-owned, open social graph that any application can plug into. Read more
 
-# How to install
+## How to install
 ```
 npm install / yarn install
 npm run dev / yarn dev
 ```
+
+## Demo:
 
 

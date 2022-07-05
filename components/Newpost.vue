@@ -1,6 +1,12 @@
 <template>
   <div class="modal-overlay">
-    <div v-if="!uri" class="modals">
+    <div v-if="loading>0" class="modals">
+      <div class="loader"></div>
+      <span v-if="loading==1">Uplading to the permaweb...</span>
+      <span v-else-if="loading==2">Updating profile image</span>
+    </div>
+    
+    <div v-else-if="!uri" class="modals">
         <div class="close" @click="$emit('close-modal')">X </div>
         <h6>Upload image!</h6>
         <input type="file"  @change="onFileChange" accept="image/png, image/gif, image/jpeg" />
@@ -16,20 +22,48 @@
 </template>
 <script>
 
-import BigNumber from 'bignumber.js'
+import { WebBundlr } from "@bundlr-network/client"
+import {  ethers,providers } from 'ethers'
+import ABI from '@/plugins/abi'
+import { LENS_HUB_CONTRACT_ADDRESS,defaultProfile} from '@/plugins/api'
 
 export default {
-    props:['bundlr'],
     data() {
-            return {
-                image:null,
-                uri:null,
-                image:null,
-                bundlrRef:this.bundlr
-            }
+      return {
+        loading:0,
+        image:null,
+        uri:null,
+        image:null,
+        bundlrRef:null,
+        wallet:this.$store.state.wallet
+      }
     },
     methods:{
+        async initialiseBundlr(provider) {
+          
+          const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider)
+          await bundlr.ready()
+          
+          this.bundlrRef = bundlr
+          this.bundlrRef.current = bundlr
+          this.$store.state.bundlrRef = bundlr
+          this.$store.state.bundlrRef.current = bundlr  
+        },
 
+        async  setProfilePhoto(uri,provider) {
+          let dis=this
+          const urqlClient = await this.$util.createClient()
+          const dd = await urqlClient.query(defaultProfile, {request:{ethereumAddress: dis.wallet }}).toPromise()
+          let profile=dd.data.defaultProfile
+
+          const contract = new ethers.Contract( LENS_HUB_CONTRACT_ADDRESS, ABI,provider.getSigner() )
+          try {
+            const tx = await contract.setProfileImageURI(profile.id, uri)
+            await tx.wait()
+          } catch (err) {
+            console.log('error: ', err)
+          }
+        },
 
         onFileChange(e) {
             let dis=this
@@ -42,24 +76,28 @@ export default {
                 reader.readAsArrayBuffer(file)
             }
         },
-        async uploadFile() {    
+
+        async uploadFile() {   
+          try{
+
+       
+            const provider = new providers.Web3Provider(window.ethereum);
+            await provider._ready()
+          
+            await this.initialiseBundlr(provider)
+            this.loading=1
             let tx = await this.bundlrRef.uploader.upload(this.file, [{ name: "Content-Type", value: "image/png" }])
             console.log('tx: ', tx)
             this.uri=`http://arweave.net/${tx.data.id}`
-
-
-                 
+            this.loading=2
+            await this.setProfilePhoto(this.uri,provider)
+            if(!alert('Success!')){window.location.reload();}
+          } catch(e){
+            console.log(e)
+           
+          }
         },
-        parseInput (input) {
-            const conv = new BigNumber(input).multipliedBy(this.bundlrRef.currencyConfig.base[1])
-            if (conv.isLessThan(1)) {
-                console.log('error: value too small')
-            return
-            } else {
-                return conv
-            }
         
-        }
   }
 }
 </script>

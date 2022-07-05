@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { createClient } from 'urql'
 import { refresh } from '@/plugins/api'
+import {  utils } from 'ethers'
 
 export const APIURL = "https://api.lens.dev"
 export const STORAGE_KEY = "LH_STORAGE_KEY"
@@ -11,7 +12,31 @@ export const basicClient = new createClient({
 
 export default ({ app,store,route }, inject) => {
     inject('util',{
-        parseJwt (token) {
+      async checkMatic(){
+
+        const chainId = 137 // Polygon Mainnet
+        if (window.ethereum.networkVersion !== chainId) {
+              try {
+                await window.ethereum.request({ method: 'wallet_switchEthereumChain',params: [{ chainId: utils.hexlify(chainId) }]});
+              } catch (err) {
+                console.log(err)
+                if (err.code === 4902) {
+                  await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                      {
+                        chainName: 'Polygon Mainnet',
+                        chainId: utils.hexlify(chainId),
+                        nativeCurrency: { name: 'MATIC', decimals: 18, symbol: 'MATIC' },
+                        rpcUrls: ['https://polygon-rpc.com/']
+                      }
+                    ]
+                  });
+                }
+              }
+        }
+      },
+      parseJwt (token) {
           var base64Url = token.split('.')[1];
           var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
           var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -19,9 +44,6 @@ export default ({ app,store,route }, inject) => {
           }).join(''));
         
           return JSON.parse(jsonPayload);
-        },
-        gclient(){ 
-          return basicClient
         },
         async refreshAuthToken() {
           const token = JSON.parse(localStorage.getItem(STORAGE_KEY))
@@ -48,7 +70,6 @@ export default ({ app,store,route }, inject) => {
           if (storageData) {
             try {
               const { accessToken } = await this.refreshAuthToken()
-              console.log(accessToken)
               const urqlClient = new createUrqlClient({
                 url: APIURL,
                 fetchOptions: {

@@ -40,6 +40,16 @@ export default {
   },
   methods:{
 
+    parseInput (input) {
+      const conv = new BigNumber(input).multipliedBy(this.bundlrRef.currencyConfig.base[1])
+      if (conv.isLessThan(1)) {
+        console.log('error: value too small')
+        return
+      } else {
+        return conv
+      }
+    },
+    
     async fetchBalance() {
        
       const provider = new providers.Web3Provider(window.ethereum);
@@ -55,15 +65,6 @@ export default {
       const bal = await this.bundlrRef.current.getLoadedBalance()
       console.log('bal: ', utils.formatEther(bal.toString()))
       this.balance=utils.formatEther(bal.toString())
-    },
-    parseInput (input) {
-      const conv = new BigNumber(input).multipliedBy(this.bundlrRef.currencyConfig.base[1])
-      if (conv.isLessThan(1)) {
-        console.log('error: value too small')
-        return
-      } else {
-        return conv
-      }
     },
     async  fundWallet() {
       try{

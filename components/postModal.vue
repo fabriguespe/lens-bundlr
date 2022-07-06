@@ -13,7 +13,7 @@
         <button v-if="!uri" @click="uploadFile">Post</button>
     </div>
     <div v-else>
-        <div class="close" @click="$emit('close-modal')">X </div>
+        <div class="close" @click="$emit('close-modal')">X</div>
         <h6>Upload image!</h6>
         <input type="file"  @change="onFileChange" accept="image/png, image/gif, image/jpeg" />
         <button v-if="!uri" @click="uploadFile">Post</button>
@@ -80,21 +80,27 @@ export default {
         async uploadFile() {   
           try{
 
-       
+            //Init bundlr
             const provider = new providers.Web3Provider(window.ethereum);
             await provider._ready()
-          
-            await this.initialiseBundlr(provider)
+
+            this.initialiseBundlr(provider)
             this.loading=1
+            
+            //Upload image
             let tx = await this.bundlrRef.uploader.upload(this.file, [{ name: "Content-Type", value: "image/png" }])
             console.log('tx: ', tx)
             this.uri=`http://arweave.net/${tx.data.id}`
+
             this.loading=2
+             
+            //Update lens profile
             await this.setProfilePhoto(this.uri,provider)
+
             if(!alert('Success!')){window.location.reload();}
+
           } catch(e){
             console.log(e)
-           
           }
         },
         

@@ -1,6 +1,5 @@
 export default {
   ssr:false,
-  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'lens-app',
     htmlAttrs: {
@@ -16,6 +15,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  router: {
+    base: ''
+  },
 
   css: [
   ],
@@ -28,7 +30,5 @@ export default {
   buildModules: [
   ],
   modules: [
-  ],
-  build: {
-  }
+  ]
 }

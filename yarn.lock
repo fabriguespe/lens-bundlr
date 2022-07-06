@@ -2432,6 +2432,11 @@ array.prototype.reduce@^1.0.4:
     es-array-method-boxes-properly "^1.0.0"
     is-string "^1.0.7"
 
+arweave-deploy@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/arweave-deploy/-/arweave-deploy-1.9.1.tgz#1cc45fc5eb2fd62985ad4e54076ffe850a6a33f7"
+  integrity sha512-yNC9joASgsqQBASLwNivzMJxUHyXuzWHg7qLIGg/+y5hDprSy3fsMUNJ83qCpATYnmJdnECcBXKESBnhalM88w==
+
 arweave-stream-tx@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/arweave-stream-tx/-/arweave-stream-tx-1.1.0.tgz"

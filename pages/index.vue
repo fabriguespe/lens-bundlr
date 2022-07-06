@@ -11,7 +11,7 @@
       <span style="display:block;margin-top:20px;">{{profile.id}}</span>
       <h2 style="margin-top:20px;">{{profile.name}}</h2>
       <p style="margin-top:20px;">{{profile.bio}}</p>
-      <Newpost v-show="showModal" @close-modal="showModal = false" :provider="provider" />
+      <postModal v-show="showModal" @close-modal="showModal = false" :provider="provider" />
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
 <script>
 import { defaultProfile } from '@/plugins/api'
 import MyNav from '@/components/Nav'
+import postModal from '@/components/postModal'
 export default {
   data() {
         return {
@@ -55,7 +56,7 @@ export default {
 
   },
   components:{
-    MyNav
+    MyNav,postModal
   }
 }
 </script>

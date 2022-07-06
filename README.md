@@ -19,6 +19,6 @@ npm install / yarn install
 npm run dev / yarn dev
 ```
 
-## Demo:
+## Demo: https://lens-app-eight.vercel.app/
 
 

@@ -84,7 +84,7 @@ export default {
             const provider = new providers.Web3Provider(window.ethereum);
             await provider._ready()
 
-            this.initialiseBundlr(provider)
+            await this.initialiseBundlr(provider)
             this.loading=1
             
             //Upload image
@@ -97,6 +97,7 @@ export default {
             //Update lens profile
             await this.setProfilePhoto(this.uri,provider)
 
+            this.loading=0
             if(!alert('Success!')){window.location.reload();}
 
           } catch(e){

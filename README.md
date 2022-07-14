@@ -1,24 +1,24 @@
-## Introduction
+## Installation
 
-In this article I will be showing you how to create an app that is fully independent of centralized servers. This app will be stored forever just for a once-time payment. No one ever will be able to delete or modify it.
+To run this project:
 
-### Arweave:
-
-It is a new type of storage that backs data with sustainable and perpetual endowments, allowing users and developers to truly store data forever – for the very first time. Read more
-
-### Bundlr:
-
-Bundlr makes web3 data storage on Arweave accessible by making it as fast, easy, and reliable as traditional data storage. Arweave is the only truly decentralized, permanent data storage solution.
-
-### Lens: 
-Lens Protocol is a user-owned, open social graph that any application can plug into. Read more
-
-## How to install
-```
-npm install / yarn install
-npm run dev / yarn dev
+```sh
+git clone git@github.com:dabit3/bundlr-arweave-example.git
+cd bundlr-arweave-example
+npm install
+npm run dev
 ```
 
-## Demo: https://lens-app-eight.vercel.app/
+[Demo](https://lens-app-eight.vercel.app/)
 
+## Article
 
+[Create a social dapp with Lens, Arweave, Bundlr and Nuxtjs](https://duckduckgo.com).
+
+## Contact
+
+Fabrizio Guespe
+
+Twitter [@fabriguespe](https://twitter.com/fabriguespe)
+
+[fguespe@gmail.com](mailto:fguespe@gmail.com)

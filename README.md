@@ -13,7 +13,7 @@ npm run dev
 
 ## Article
 
-[Create a social dapp with Lens, Arweave, Bundlr and Nuxtjs](https://duckduckgo.com).
+[Create a social dapp with Lens, Arweave, Bundlr and Nuxtjs](https://mirror.xyz/0x7E0b0363404751346930AF92C80D1fef932Cc48a/xUYFpby76cHJcW8S-d6fHGNQXAZxvpgRgXzzuD8-Dpo).
 
 ## Contact
 

@@ -87,6 +87,7 @@ export default {
             await this.initialiseBundlr(provider)
             this.loading=1
             
+
             //Upload image
             let tx = await this.bundlrRef.uploader.upload(this.file, [{ name: "Content-Type", value: "image/png" }])
             console.log('tx: ', tx)

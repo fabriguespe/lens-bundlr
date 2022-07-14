@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-[Demo](https://lens-app-eight.vercel.app/)
+[Check out the demo app](https://lens-app-eight.vercel.app/)
 
 ## Article
 

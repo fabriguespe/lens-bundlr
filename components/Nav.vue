@@ -3,8 +3,7 @@
       <a class="navbar-brand" href="/"><img width="50" src="https://docs.bundlr.network/img/logo.svg"/></a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"> <router-link class="nav-link" to="/">Profile</router-link></li>
-          <li class="nav-item active"> <router-link class="nav-link" to="/explore">Explore</router-link></li>
+          <li class="nav-item active"> <router-link class="nav-link" to="/">Explore</router-link></li>
           <li class="nav-item active"> <router-link class="nav-link" to="/balance">Account</router-link></li>
         </ul>
         <div class="form-inline my-2 my-lg-0">

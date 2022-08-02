@@ -53,6 +53,7 @@ export default {
     async fetchBalance() {
        
       const provider = new providers.Web3Provider(window.ethereum);
+        console.log(window.ethereum)
       await provider._ready()
     
       const bundlr = new WebBundlr("https://node1.bundlr.network", "matic", provider)
@@ -71,8 +72,10 @@ export default {
 
         if (!this.amount) return
         let response = await this.bundlrRef.fund(this.parseInput(this.amount))
+        console.log(this.parseInput(this.amount).toString())
+        
         console.log('Wallet funded: ', response)
-        fetchBalance()
+        this.fetchBalance()
       }catch(e){
         console.log(e)
       }

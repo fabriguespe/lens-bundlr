@@ -1,62 +1,64 @@
 <template>
   <div class="container text-center">
     <MyNav :key="wallet" :wallet="wallet"/>
-    <div v-if="!wallet && !profile" class="container text-center">
-      <h4>No profile, connect your wallet</h4>
-    </div>
-    <div v-else-if="!profile" class="loader"></div>
-    <div v-else-if="profile" class="container text-center">
-      <img v-if="profile.picture" style='border-radius:50%;display:block;max-width:300px;margin:0 auto;' :src='profile.picture.original.url'/>
-      <button class="btn btn-outline-success " style="margin-top:20px;"  @click="showModal=true">Change image</button>
-      <span style="display:block;margin-top:20px;">{{profile.id}}</span>
-      <h2 style="margin-top:20px;">{{profile.name}}</h2>
-      <p style="margin-top:20px;">{{profile.bio}}</p>
-      <postModal v-show="showModal" @close-modal="showModal = false" :provider="provider" />
+    <div>
+      <h4 style="margin-top:20px;text-aling:center">Latest posts</h4>
+      <div v-if="!pubs" class="loader"></div>
+      <div v-for="(pub,index) in pubs" :key="pub.id">
+        <div v-for="(post,index) in pub.publication" :key="post.id">
+          <template v-if="post.media && post.media[0] && post.media[0].original && post.media[0].original.mimeType.includes('image')">
+            <b style="display:block;margin-top:40px;">{{pub.id}}-{{pub.name}}</b>
+            <img style='display:block;max-width:300px;margin:0 auto;' :src='post.media[0].original.url'/>
+          </template>
+        </div>
+        
+      </div>
     </div>
   </div>
 </template>
 
 
 <script>
-import { defaultProfile } from '@/plugins/api'
+
+import {  getPublications, recommendProfiles } from '@/plugins/api'
 import MyNav from '@/components/Nav'
-import postModal from '@/components/postModal'
 export default {
   data() {
         return {
-            showModal:false,
-            profile:null,
-            provider:null,
-            wallet:this.$store.state.wallet
+          wallet:this.$store.state.wallet,
+          pubs:null,
         }
   },
   async mounted(){
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    const account = accounts[0]
+    this.wallet=account
+    this.$store.state.wallet=account
 
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' })
-      const account = accounts[0]
-      this.wallet=account
-      this.$store.state.wallet=account
-      await this.$util.checkMatic()
-      if(this.wallet)this.fetchProfile(this.wallet)
+    await this.$util.checkMatic()
+    this.recommendProfiles()
   },
   methods:{
     
-    
-    async  fetchProfile(wallet) {
+    async recommendProfiles() {
       try {
-        let dis= this
+
         const urqlClient = await this.$util.createClient()
-        const dd = await urqlClient.query(defaultProfile, {request:{ethereumAddress: wallet }}).toPromise()
-        this.profile=dd.data.defaultProfile
-   
+        const response = await urqlClient.query(recommendProfiles).toPromise()
+        const profileData = await Promise.all(response.data.recommendedProfiles.map(async profile => {
+          const pub = await urqlClient.query(getPublications, { id: profile.id, limit: 1 }).toPromise()
+          profile.publication = pub.data.publications.items[0]
+          return profile
+        }))
+        this.pubs=profileData
       } catch (err) {
-        console.log('error fetching profile...', err)
+        console.log('error fetching recommended profiles: ', err)
       }
-    }
+    },
 
   },
   components:{
-    MyNav,postModal
+    MyNav
   }
 }
 </script>
